@@ -15,9 +15,10 @@ class NoiseTrader(rho:Double, sigma:Double, V:Double, N:Double, seed:Long) exten
 
   val random = new Random(seed)
   def calculate_demand() = {
-    val noise = sigma * random.nextDouble
+    val noise = sigma * random.nextGaussian()
     rho * currPriceLog + noise + (1 - rho) * fundamentalReturn
   }
+
   def receive = {
     case Price(price, exchange) =>
       currPriceLog = calculate_demand()

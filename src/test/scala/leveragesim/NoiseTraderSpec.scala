@@ -25,6 +25,8 @@ class NoiseTraderSpec(_system: ActorSystem)
     val message = Price(1, testProbe.ref)
     val testNoiseTrader = system.actorOf(Props(new NoiseTrader(1, 1, 1, 1, 1)))
     testNoiseTrader ! message
-    testProbe.expectMsgPF() { case Demand(x: Double, "noise", `testNoiseTrader`) => logger.info(s"received demand message with $x units of demand") }
+    testProbe.expectMsgPF() { //
+       case Demand(x: Double, "noise", `testNoiseTrader`) => Math.abs(x - 4.76635) should be <= 5e-6
+    }
   }
 }
