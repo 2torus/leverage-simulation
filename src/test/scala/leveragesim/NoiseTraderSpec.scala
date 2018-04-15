@@ -20,7 +20,7 @@ class NoiseTraderSpec(_system: ActorSystem)
   }
 
   "A noise trader actor" should "reply to price message with demand" in {
-    val testSim = new Simulation(initialWealth=1, totalValue=1)
+    val testSim = new Simulation(fundamentalValue=1, totalValue=1)
     val testProbe = TestProbe()
     val message = Price(1, testProbe.ref)
     val testNoiseTrader = system.actorOf(Props(new NoiseTrader(rho=1, sigma=1, sim=testSim, seed=1)))

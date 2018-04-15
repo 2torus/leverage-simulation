@@ -10,7 +10,7 @@ class NoiseTrader(rho:Double, sigma:Double, sim: Simulation, seed:Long) extends 
 
   require(sigma > 0)
   require(rho >= 0 && rho <= 1)
-  val fundamentalReturn = Math.log(sim.initialWealth * sim.totalValue)
+  val fundamentalReturn = Math.log(sim.fundamentalValue * sim.totalValue)
   var currPriceLog = fundamentalReturn
 
   val random = new Random(seed)

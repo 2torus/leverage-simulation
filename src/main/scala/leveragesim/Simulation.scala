@@ -1,6 +1,6 @@
 package leveragesim
 
-class Simulation(val initialWealth: Double, val totalValue: Double) {
-  require(initialWealth > 0)
+class Simulation(val fundamentalValue: Double, val totalValue: Double) {
+  require(fundamentalValue > 0)
   require(totalValue > 0)
 }

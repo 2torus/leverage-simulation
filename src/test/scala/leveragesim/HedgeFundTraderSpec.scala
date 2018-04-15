@@ -20,7 +20,7 @@ class HedgeFundTraderSpec(_system: ActorSystem)
   }
 
   "HedgeFundTrader actor" should "respond to price message with demand" in {
-    val testSim = new Simulation(initialWealth = 1, totalValue = 1)
+    val testSim = new Simulation(fundamentalValue = 1, totalValue = 1)
     val testProbe = TestProbe()
     val message = Price(1, testProbe.ref)
     val testHedgeFundTrader = system.actorOf(Props(new HedgeFundTrader(initialWealth=1, maxLeverage=1, beta=1, sim=testSim)))
