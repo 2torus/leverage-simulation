@@ -1,11 +1,15 @@
 package leveragesim
 
 import akka.actor.ActorRef
+import leveragesim.DemandType.DemandType
 
-/**
-  * Created by torus on 4/14/18.
-  */
 object Messages {
-  case class Demand(units:Double, senderType:String, sender:ActorRef)
+  case class Demand(units:Double, senderType:DemandType, sender:ActorRef)
   case class Price(units:Double, exchange:ActorRef)
+}
+
+object DemandType {
+  sealed trait DemandType extends Product with Serializable
+  case object NoiseDemand extends  DemandType
+  case object HedgeFundDemand extends DemandType
 }

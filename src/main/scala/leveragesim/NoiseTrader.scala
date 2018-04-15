@@ -1,16 +1,16 @@
 package leveragesim
 
 import akka.actor.Actor
+import leveragesim.DemandType.NoiseDemand
 import leveragesim.Messages.{Demand, Price}
 
 import scala.util.Random
 
-class NoiseTrader(rho:Double, sigma:Double, V:Double, N:Double, seed:Long) extends Actor {
-  require(V > 0)
-  require(N > 0)
+class NoiseTrader(rho:Double, sigma:Double, sim: Simulation, seed:Long) extends Actor {
+
   require(sigma > 0)
   require(rho >= 0 && rho <= 1)
-  val fundamentalReturn = Math.log(V*N)
+  val fundamentalReturn = Math.log(sim.initialWealth * sim.totalValue)
   var currPriceLog = fundamentalReturn
 
   val random = new Random(seed)
@@ -23,6 +23,6 @@ class NoiseTrader(rho:Double, sigma:Double, V:Double, N:Double, seed:Long) exten
     case Price(price, exchange) =>
       currPriceLog = calculate_demand()
       val nextDemand = math.exp(currPriceLog) / price
-      exchange ! Demand(nextDemand, "noise", self )
+      exchange ! Demand(nextDemand, NoiseDemand, self )
   }
 }

@@ -2,7 +2,7 @@ package leveragesim
 
 import akka.actor.{ActorSystem, Props}
 import akka.testkit.{TestKit, TestProbe}
-import com.typesafe.scalalogging.Logger
+import leveragesim.DemandType.NoiseDemand
 import leveragesim.Messages.{Demand, Price}
 import org.scalatest.{BeforeAndAfterAll, FlatSpecLike, Matchers}
 
@@ -20,13 +20,13 @@ class NoiseTraderSpec(_system: ActorSystem)
   }
 
   "A noise trader actor" should "reply to price message with demand" in {
-    val logger = Logger(classOf[NoiseTraderSpec])
+    val testSim = new Simulation(initialWealth=1, totalValue=1)
     val testProbe = TestProbe()
     val message = Price(1, testProbe.ref)
-    val testNoiseTrader = system.actorOf(Props(new NoiseTrader(1, 1, 1, 1, 1)))
+    val testNoiseTrader = system.actorOf(Props(new NoiseTrader(rho=1, sigma=1, sim=testSim, seed=1)))
     testNoiseTrader ! message
     testProbe.expectMsgPF() { //
-       case Demand(x: Double, "noise", `testNoiseTrader`) => Math.abs(x - 4.76635) should be <= 5e-6
+       case Demand(x: Double, NoiseDemand, `testNoiseTrader`) => Math.abs(x - 4.76635) should be <= 5e-6
     }
   }
 }
