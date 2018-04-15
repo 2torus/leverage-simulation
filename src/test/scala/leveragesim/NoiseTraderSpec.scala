@@ -25,7 +25,8 @@ class NoiseTraderSpec(_system: ActorSystem)
     val message = Price(1, testProbe.ref)
     val testNoiseTrader = system.actorOf(Props(new NoiseTrader(rho=1, sigma=1, sim=testSim, seed=1)))
     testNoiseTrader ! message
-    testProbe.expectMsgPF() { //
+    testProbe.expectMsgPF() {
+        //since the seed is fixed  then the demand should be the same
        case Demand(x: Double, NoiseDemand, `testNoiseTrader`) => Math.abs(x - 4.76635) should be <= 5e-6
     }
   }

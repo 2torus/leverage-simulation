@@ -11,7 +11,7 @@ class HedgeFundTrader(initialWealth: Double, maxLeverage: Double, beta: Double, 
   var demand = 0.0
   def receive = {
     case Price(price, exchange) =>
-      val missprice = price - initialWealth
-      if (missprice <= 0) exchange ! Demand(0, HedgeFundDemand, self)
+      val misprice = price - initialWealth
+      if (misprice <= 0) exchange ! Demand(0, HedgeFundDemand, self)
   }
 }
