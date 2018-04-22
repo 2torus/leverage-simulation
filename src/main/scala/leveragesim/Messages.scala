@@ -5,7 +5,10 @@ import leveragesim.DemandType.DemandType
 
 object Messages {
   case class Demand(units:Double, senderType:DemandType, sender:ActorRef)
+  case class DemandQuote(units: Double , senderType: DemandType, sender:ActorRef)
   case class Price(units:Double, exchange:ActorRef)
+  case class PriceQuote(units: Double, exchange: ActorRef)
+
 }
 
 object DemandType {
