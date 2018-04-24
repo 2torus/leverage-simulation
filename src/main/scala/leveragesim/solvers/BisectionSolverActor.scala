@@ -5,10 +5,9 @@ import akka.actor.{Actor, ActorRef, Props}
 object BisectionSolverActor {
   def props(targetValue: Double,
             interval: (Double, Double),
-            intervalValues: (Double, Double),
             relTol: Double,
             actorToQuery: ActorRef,
-            querier: ActorRef) = Props(new BisectionSolverActor(targetValue, interval, intervalValues, relTol, actorToQuery, querier))
+            querier: ActorRef) = Props(new BisectionSolverActor(targetValue, interval, relTol, actorToQuery, querier))
 
   case class Success(value: Double)
 
@@ -16,9 +15,9 @@ object BisectionSolverActor {
 
 }
 
+//noinspection TypeAnnotation
 class BisectionSolverActor(targetValue: Double,
                            var interval: (Double, Double),
-                           var intervalValues: (Double, Double),
                            relTol: Double,
                            actorToQuery: ActorRef,
                            querier: ActorRef) extends Actor {
@@ -34,19 +33,19 @@ class BisectionSolverActor(targetValue: Double,
 
   def success(value: Double) = Math.abs(value - targetValue) < relTol * Math.abs(targetValue)
 
+  actorToQuery ! (nextIter, self)
+
   def receive = {
-    case value: Double if success(value) => querier ! Success(value)
-    case value: Double if numIters == maxIters => querier ! Failure
+    case value: Double if success(value) => querier ! Success(nextIter)
+    case value: Double => querier ! Failure
     case value: Double =>
       numIters += 1
       if (value > targetValue) {
         interval = (interval._1, nextIter)
-        intervalValues = (intervalValues._1, value)
       } else {
         interval = (nextIter, interval._2)
-        intervalValues = (value, intervalValues._2)
       }
       nextIter = midPoint(interval)
-      actorToQuery ! (nextIter, this)
+      actorToQuery ! (nextIter, self)
   }
 }
