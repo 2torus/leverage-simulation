@@ -16,6 +16,10 @@ object BisectionSolverActor {
 }
 
 //noinspection TypeAnnotation
+/**
+  * Simple bisection to explore solver actor behavior
+  *
+  */
 class BisectionSolverActor(targetValue: Double,
                            var interval: (Double, Double),
                            relTol: Double,
@@ -37,7 +41,7 @@ class BisectionSolverActor(targetValue: Double,
 
   def receive = {
     case value: Double if success(value) => querier ! Success(nextIter)
-    case value: Double => querier ! Failure
+    case value: Double if numIters == maxIters => querier ! Failure
     case value: Double =>
       numIters += 1
       if (value > targetValue) {
