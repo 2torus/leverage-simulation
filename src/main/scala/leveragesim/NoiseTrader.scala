@@ -20,10 +20,10 @@ class NoiseTrader(rho:Double, sigma:Double, sim:Simulation, seed:Long) extends A
   }
 
   def receive = {
+
     case Price(price, exchange) =>
       currPriceLog = calculateDemand()
-      val nextDemand = math.exp(currPriceLog) / price
-      exchange ! Demand(nextDemand, NoiseDemand, self)
+
     case RequestForQuote(price, exchange) =>
       val nextDemand = math.exp(currPriceLog) / price
       exchange ! Demand(nextDemand, NoiseDemand, self)
